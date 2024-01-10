@@ -1,15 +1,4 @@
-//
-// 情報通信応用実験 ネットワークプログラミング
-//
-// 首都大学東京 システムデザイン学部 情報通信システムコース
-// 准教授・酒井和哉
-// ２０１５年２月５日
-//
-// 情報科学科
-// 助教・柴田祐樹
-// ２０１９年１０月　改訂
-// ２０２０年１０月　改訂
-//
+// Echo Program (client)
 
 #include <arpa/inet.h>
 #include <iostream>
@@ -47,21 +36,40 @@ int main(int argc, char* argv[])
         cout << "Failed to create a client socket.\n";
         return -1;
     }
-    // クエリ送信．（'query'という文字列）を送信するだけ．
+    // クエリ送信．
     string msg = "query";
-    n = sendto(socketd, msg.c_str(), msg.size(), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-    if (n < 0) {
-        cout << "failed to receive a message.\n";
-        return -1;
+
+    for (;;)
+    {
+        std::time_t now, later;
+
+        cout << "input message: ";
+        cin >> msg;
+        if (msg == " q" || msg == "quit" || msg == "exit") {
+            break;
+        }
+
+        time(&now);
+        n = sendto(socketd, msg.c_str(), msg.size(), 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+        if (n < 0) {
+            cout << "failed to receive a message.\n";
+            return -1;
+        }
+
+        // サーバから現在時刻を文字列として受信．
+        n = recvfrom(socketd, buff, sizeof(buff)-1, 0, NULL, NULL); // 終端文字列を入れるために，sizeof(buff)-1 として，文字列一つ分必ず余裕を持たせてデータを受信する．buff をこのまま文字列として使わない場合は全記憶を受信に使う．
+        if (n < 0) {
+            cout << "Failed to receive a message.\n";
+            return -1;
+        }
+        time(&later);
+
+        buff[n] = 0; // 終端文字列を追加．送信者が終端文字列を入れてデータを送ってきているとは限らない．
+        cout << "Echo: " << buff << ", " << htons(serv_addr.sin_port) << "\n";
+
+        double seconds = std::difftime(later, now);
+        cout << "RTT: " << seconds << " seconds\n";
     }
-    // サーバから現在時刻を文字列として受信．
-    n = recvfrom(socketd, buff, sizeof(buff)-1, 0, NULL, NULL); // 終端文字列を入れるために，sizeof(buff)-1 として，文字列一つ分必ず余裕を持たせてデータを受信する．buff をこのまま文字列として使わない場合は全記憶を受信に使う．
-    if (n < 0) {
-        cout << "Failed to receive a message.\n";
-        return -1;
-    }
-    buff[n] = 0; // 終端文字列を追加．送信者が終端文字列を入れてデータを送ってきているとは限らない．
-    cout << "Time: " << buff <<", " << htons(serv_addr.sin_port)<< "\n";
 
     // ソケットを閉じる
     close(socketd);

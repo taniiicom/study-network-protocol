@@ -1,15 +1,4 @@
-//
-// 情報通信応用実験 ネットワークプログラミング
-//
-// 首都大学東京 システムデザイン学部 情報通信システムコース
-// 准教授・酒井和哉
-// ２０１５年２月５日
-//
-// 情報科学科
-// 助教・柴田祐樹
-// ２０１９年１０月　改訂
-// ２０２０年１０月　改訂
-//
+// Echo Program (server)
 
 #include <arpa/inet.h>
 #include <iostream>
@@ -67,11 +56,17 @@ int main(int argc, char* argv[])
             return -1;
         }
 
-        cout << "Received a query from [" << inet_ntoa(clnt_addr.sin_addr) << ", " << htons(clnt_addr.sin_port) << "]" << endl;
+        // メッセージを出力
+        // cout << "Received a query from [" << inet_ntoa(clnt_addr.sin_addr) << ", " << htons(clnt_addr.sin_port) << "]" << endl;
+        string m = buff; // 受け取ったメッセージ
+        string ip = inet_ntoa(clnt_addr.sin_addr);
+        string port = to_string(htons(clnt_addr.sin_port));
+        string msg = m + ip + port; // string クラスは加算演算子で文字列を結合可能．
+        cout << msg << endl;
 
         // 現在時刻取得
-        time(&now);
-        string msg = string("from shibata ") + ctime(&now); // string クラスは加算演算子で文字列を結合可能．
+        // time(&now);
+        // string msg = string("from shibata ") + ctime(&now); // string クラスは加算演算子で文字列を結合可能．
 
         // 現在時刻を文字列として，クライアントに送信する．
         n = sendto(serv_socket, msg.c_str(), msg.size(), 0, (struct sockaddr*)&clnt_addr, sizeof(clnt_addr));
