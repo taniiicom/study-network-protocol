@@ -62,6 +62,8 @@ int main(int argc, char* argv[])
                 return -1;
             }
 
+            printf("受信中...\n");
+
             // sub_msg に 終端文字が含まれいているか check
             for (int i = 0; i < BUFF_SIZE; i++)
             {

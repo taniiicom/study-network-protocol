@@ -88,6 +88,7 @@ Usage: %s [-a] to_ip ...
             char c = cU(mt);
             msg.push_back(c);
         }
+        msg.push_back('\0'); // 終端文字
     }
 
     for (;;)
