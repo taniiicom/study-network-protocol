@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
         // UNIX ライクなハイフンを使ったオプションの解析
         int opt;
         opterr = 0; //getopt()のエラーメッセージを無効にする。
-        while ((opt = getopt(argc, argv, "a:h")) != -1) {
+        while ((opt = getopt(argc, argv, "ha:")) != -1) {
             //コマンドライン引数のオプションがなくなるまで繰り返す
             switch (opt) {
                 case 'a':
@@ -56,7 +56,12 @@ Usage: %s [-a] to_ip ...
             }
         }
         // arg1: to_ip: 送信先の ip アドレスを指定します.
-        serv_ip = argv[optind];
+        if (optind < argc) {
+            serv_ip = argv[optind];
+        } else {
+            printf("IP address is not provided.\n");
+            return 1;
+        }
     }
 
     // パラメータの初期化
