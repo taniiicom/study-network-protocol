@@ -46,6 +46,8 @@ int main(int argc, char* argv[])
 
     // クライアントからのクエリを待ち受け．
     while (true) {
+        bool is_end = false;
+
         // クライアントからクエリ文字列を待ち受ける．
         // UDPはコネクションを確立しないため，クライアントがクエリ文字列を送ってくるのを待機．
         cout << "waiting for a client...\n";
@@ -54,7 +56,7 @@ int main(int argc, char* argv[])
         // 受信
         char snippet[BUFF_SIZE];
 
-        for (;;)
+        while (!is_end)
         {
             n = recvfrom(serv_socket, snippet, BUFF_SIZE, 0, (struct sockaddr*)&clnt_addr, &addr_len);
             if (n < 0) {
@@ -70,6 +72,7 @@ int main(int argc, char* argv[])
             {
                 if (snippet[i] == char(1))
                 {
+                    is_end = true;
                     break;
                 }
                 buff[i] = snippet[i];
