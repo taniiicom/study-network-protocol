@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
         // UNIX ライクなハイフンを使ったオプションの解析
         int opt;
         opterr = 0; //getopt()のエラーメッセージを無効にする。
-        while ((opt = getopt(argc, argv, "fgh:")) != -1) {
+        while ((opt = getopt(argc, argv, "a:h")) != -1) {
             //コマンドライン引数のオプションがなくなるまで繰り返す
             switch (opt) {
                 case 'a':
