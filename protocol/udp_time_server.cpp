@@ -50,10 +50,27 @@ int main(int argc, char* argv[])
         // UDPはコネクションを確立しないため，クライアントがクエリ文字列を送ってくるのを待機．
         cout << "waiting for a client...\n";
         addr_len = sizeof(clnt_addr);
-        n = recvfrom(serv_socket, buff, BUFF_SIZE, 0, (struct sockaddr*)&clnt_addr, &addr_len);
-        if (n < 0) {
-            cout << "failed to read a query from the socket.\n";
-            return -1;
+
+        // 受信
+        char snippet[BUFF_SIZE];
+
+        for (;;)
+        {
+            n = recvfrom(serv_socket, snippet, BUFF_SIZE, 0, (struct sockaddr*)&clnt_addr, &addr_len);
+            if (n < 0) {
+                cout << "failed to read a query from the socket.\n";
+                return -1;
+            }
+
+            // sub_msg に 終端文字が含まれいているか check
+            for (int i = 0; i < BUFF_SIZE; i++)
+            {
+                if (snippet[i] == '\0')
+                {
+                    break;
+                }
+                buff[i] = snippet[i];
+            }
         }
 
         // メッセージを出力

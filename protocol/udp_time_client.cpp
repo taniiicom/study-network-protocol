@@ -7,7 +7,7 @@
 #include <unistd.h> // https://linux.die.net/man/2/read
 #include <random>
 
-const int BUFF_SIZE = 64; // バッファのサイズ
+const int BUFF_SIZE = 500; // バッファのサイズ
 using namespace std;
 
 /*
@@ -96,7 +96,10 @@ Usage: %s [-a] to_ip ...
     {
         std::time_t now, later;
 
-        if (option_auto == false) {
+        if (option_auto == true) {
+            printf("-a オプションが有効のため, 自動で生成した文字列を送信します.\n");
+            printf("string: %s\n", msg.c_str());
+        } else {
             cout << "input message: ";
             cin >> msg;
             if (msg == " q" || msg == "quit" || msg == "exit") {
@@ -105,10 +108,21 @@ Usage: %s [-a] to_ip ...
         }
 
         time(&now);
-        n = sendto(socketd, msg.c_str(), msg.size(), 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
-        if (n < 0) {
-            cout << "failed to receive a message.\n";
-            return -1;
+
+        // 文字列を分割して送信
+        int cursor = 0;
+        int msg_size = msg.size();
+
+        while (cursor < msg_size) {
+            // 送信
+            string snippet = msg.substr(cursor, BUFF_SIZE);
+            n = sendto(socketd, snippet.c_str() + cursor, msg_size - cursor, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+            if (n < 0) {
+                cout << "Failed to send a message.\n";
+                return -1;
+            }
+
+            cursor += BUFF_SIZE;
         }
 
         // サーバから現在時刻を文字列として受信．
@@ -126,8 +140,6 @@ Usage: %s [-a] to_ip ...
         cout << "RTT: " << seconds << " seconds\n";
 
         if (option_auto == true) {
-            printf("-a オプションが有効のため, 自動で生成した文字列を送信しました.\n");
-            printf("string: %s\n", msg.c_str());
             break;
         };
     }
