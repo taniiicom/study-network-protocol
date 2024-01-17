@@ -97,7 +97,7 @@ Usage: %s [-a] to_ip ...
 
         if (option_auto == true) {
             printf("-a オプションが有効のため, 自動で生成した文字列を送信します.\n");
-            printf("string length: %s\n", to_string(option_auto_length));
+            printf("string length: %i\n", option_auto_length);
             printf("string: %s\n", msg.c_str());
         } else {
             cout << "input message: ";

@@ -6,7 +6,7 @@
 #include <ctime>
 #include <unistd.h> // https://linux.die.net/man/2/read
 
-const int BUFF_SIZE = 64; // バッファのサイズ
+const int BUFF_SIZE = 500; // バッファのサイズ
 
 /*
  * UDP Daytimeサーバ.
@@ -63,6 +63,7 @@ int main(int argc, char* argv[])
             }
 
             printf("受信中...\n");
+            printf("snippet: %s\n", snippet);
 
             // sub_msg に 終端文字が含まれいているか check
             for (int i = 0; i < BUFF_SIZE; i++)
