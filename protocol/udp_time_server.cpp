@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
             // sub_msg に 終端文字が含まれいているか check
             for (int i = 0; i < BUFF_SIZE; i++)
             {
-                if (snippet[i] == '\0')
+                if (snippet[i] == char(1))
                 {
                     break;
                 }
