@@ -5,25 +5,60 @@
 #include <chrono>
 #include <ctime>
 #include <unistd.h> // https://linux.die.net/man/2/read
+#include <random>
 
 const int BUFF_SIZE = 64; // バッファのサイズ
-
+using namespace std;
 
 /*
  * UDP Daytimeクライアント
  */
 int main(int argc, char* argv[])
 {
-    using namespace std;
     cout << "upd time client v1.0.0" << endl; // ソースコードへの変更を行ったら数値を変える．
     string serv_ip = "127.0.0.1"; // ループバックアドレス
     in_port_t port_num = 5000; // ポート番号
     int n = 0; // 戻り値の保存用
     char buff[BUFF_SIZE]; // 送受信用バッファ
 
-    if (argc == 2) {
-        serv_ip = argv[1];
+    // options
+    bool option_auto = false;
+    int option_auto_length = 0;
+
+    {
+        /* コマンドライン引数 */
+        // UNIX ライクなハイフンを使ったオプションの解析
+        int opt;
+        opterr = 0; //getopt()のエラーメッセージを無効にする。
+        while ((opt = getopt(argc, argv, "fgh:")) != -1) {
+            //コマンドライン引数のオプションがなくなるまで繰り返す
+            switch (opt) {
+                case 'a':
+                    printf("-a [int]: auto: 文字列を標準入力で指定せずに, 自動で生成します. 引数には文字列の長さを指定します.\n");
+                    printf("string length: %s\n", optarg);
+                    option_auto = true;
+                    option_auto_length = atoi(optarg);
+                    break;
+
+                case 'h':
+                    printf(R"(-h: hint: 
+-a [int]: auto: 文字列を標準入力で指定せずに, 自動で生成します. 引数には文字列の長さを指定します.
+-h: hint: ヒントを表示します.
+to_ip: 送信先の ip アドレスを指定します.
+Usage: %s [-a] to_ip ...
+)");
+                    break;
+
+                default: /* '?' */
+                    //指定していないオプションが渡された場合
+                    printf("Usage: %s [-a] arg1 ...\n", argv[0]);
+                    break;
+            }
+        }
+        // arg1: to_ip: 送信先の ip アドレスを指定します.
+        serv_ip = argv[optind];
     }
+
     // パラメータの初期化
     struct sockaddr_in serv_addr; // アドレス構造体
     serv_addr.sin_family = AF_INET;
@@ -36,17 +71,32 @@ int main(int argc, char* argv[])
         cout << "Failed to create a client socket.\n";
         return -1;
     }
-    // クエリ送信．
-    string msg = "query";
+
+    // クエリ作成．
+    string msg = "";
+
+    if (option_auto == true)
+    {
+        random_device rd;
+        mt19937_64 mt(rd());
+        uniform_int_distribution<char> cU(30, 80);
+        for (size_t i = 0; i < option_auto_length; i++)
+        {
+            char c = cU(mt);
+            msg.push_back(c);
+        }
+    }
 
     for (;;)
     {
         std::time_t now, later;
 
-        cout << "input message: ";
-        cin >> msg;
-        if (msg == " q" || msg == "quit" || msg == "exit") {
-            break;
+        if (option_auto == false) {
+            cout << "input message: ";
+            cin >> msg;
+            if (msg == " q" || msg == "quit" || msg == "exit") {
+                break;
+            }
         }
 
         time(&now);
@@ -69,6 +119,12 @@ int main(int argc, char* argv[])
 
         double seconds = std::difftime(later, now);
         cout << "RTT: " << seconds << " seconds\n";
+
+        if (option_auto == true) {
+            printf("-a オプションが有効のため, 自動で生成した文字列を送信しました.\n");
+            printf("string: %s\n", msg.c_str());
+            break;
+        };
     }
 
     // ソケットを閉じる
