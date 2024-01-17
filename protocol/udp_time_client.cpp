@@ -34,8 +34,6 @@ int main(int argc, char* argv[])
             //コマンドライン引数のオプションがなくなるまで繰り返す
             switch (opt) {
                 case 'a':
-                    printf("-a [int]: auto: 文字列を標準入力で指定せずに, 自動で生成します. 引数には文字列の長さを指定します.\n");
-                    printf("string length: %s\n", optarg);
                     option_auto = true;
                     option_auto_length = atoi(optarg);
                     break;
@@ -98,6 +96,7 @@ Usage: %s [-a] to_ip ...
 
         if (option_auto == true) {
             printf("-a オプションが有効のため, 自動で生成した文字列を送信します.\n");
+            printf("string length: %s\n", to_string(option_auto_length));
             printf("string: %s\n", msg.c_str());
         } else {
             cout << "input message: ";
