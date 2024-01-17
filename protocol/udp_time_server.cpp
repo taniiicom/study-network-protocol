@@ -24,6 +24,8 @@ int main(int argc, char* argv[])
     socklen_t addr_len; // アドレス長
     int n = 0; // 戻り値の保存用
 
+    int cursor = 0; // バッファのカーソル
+    string recv_msg = ""; // メッセージ
     char buff[BUFF_SIZE]; // 送信用バッファ
     time_t now; // 現在時刻の保存用変数
 
@@ -68,20 +70,22 @@ int main(int argc, char* argv[])
             printf("snippet: %s\n", snippet);
 
             // sub_msg に 終端文字が含まれいているか check
-            for (int i = 0; i < BUFF_SIZE; i++)
+            for (int i = cursor; i < cursor + BUFF_SIZE; i++)
             {
                 if (snippet[i] == char(1))
                 {
+                    printf("終端文字を検出しました.\n");
                     is_end = true;
                     break;
                 }
-                buff[i] = snippet[i];
+                recv_msg.push_back(snippet[i]);
             }
+            cursor += BUFF_SIZE;
         }
 
         // メッセージを出力
         // cout << "Received a query from [" << inet_ntoa(clnt_addr.sin_addr) << ", " << htons(clnt_addr.sin_port) << "]" << endl;
-        string m = buff; // 受け取ったメッセージ
+        string m = recv_msg; // 受け取ったメッセージ
         string ip = inet_ntoa(clnt_addr.sin_addr);
         string port = to_string(htons(clnt_addr.sin_port));
         string msg = m + " " + ip + " " + port; // string クラスは加算演算子で文字列を結合可能．
