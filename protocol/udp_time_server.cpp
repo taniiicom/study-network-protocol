@@ -98,50 +98,20 @@ int main(int argc, char* argv[])
 
         // 送信
         {
-            char buff[BUFF_SIZE]; // 送信用バッファ
-            int cursor = 0; // バッファのカーソル
-            char snippet[BUFF_SIZE];
+            // 文字列を分割して送信
+            int cursor = 0;
+            int msg_size = msg.size();
 
-            while (!is_end)
-            {
-                n = recvfrom(serv_socket, snippet, BUFF_SIZE, 0, (struct sockaddr*)&clnt_addr, &addr_len);
+            while (cursor < msg_size) {
+                // 送信
+                string snippet = msg.substr(cursor, BUFF_SIZE);
+                n = sendto(serv_socket, snippet.c_str(), BUFF_SIZE, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
                 if (n < 0) {
-                    cout << "failed to read a query from the socket.\n";
+                    cout << "Failed to send a message.\n";
                     return -1;
-                }
-
-                printf("受信中...\n");
-                printf("snippet: %s\n", snippet);
-
-                // sub_msg に 終端文字が含まれいているか check
-                for (int i = cursor; i < cursor + BUFF_SIZE; i++)
-                {
-                    if (snippet[i] == char(1))
-                    {
-                        printf("終端文字を検出しました.\n");
-                        is_end = true;
-                        break;
-                    }
-                    recv_msg.push_back(snippet[i]);
                 }
                 cursor += BUFF_SIZE;
             }
-
-        }
-
-        // 文字列を分割して送信
-        int cursor = 0;
-        int msg_size = msg.size();
-
-        while (cursor < msg_size) {
-            // 送信
-            string snippet = msg.substr(cursor, BUFF_SIZE);
-            n = sendto(serv_socket, snippet.c_str(), BUFF_SIZE, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
-            if (n < 0) {
-                cout << "Failed to send a message.\n";
-                return -1;
-            }
-            cursor += BUFF_SIZE;
         }
     }
 

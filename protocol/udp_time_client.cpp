@@ -116,8 +116,7 @@ Usage: %s [-a] to_ip ...
 
         while (cursor < msg_size) {
             // 送信
-            string snippet = msg.substr(cursor, BUFF_SIZE);
-            n = sendto(socketd, snippet.c_str(), BUFF_SIZE, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+            n = sendto(socketd, msg.c_str() + cursor, BUFF_SIZE, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
             if (n < 0) {
                 cout << "Failed to send a message.\n";
                 return -1;
