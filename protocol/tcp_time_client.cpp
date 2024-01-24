@@ -7,6 +7,7 @@
 #include <unistd.h> // https://linux.die.net/man/2/read
 #include <string>
 #include <random>
+#include <cmath>
 
 const int BUFF_SIZE = 500; // バッファのサイズ
 
@@ -40,7 +41,7 @@ int main(int argc, char* argv[])
 
                 case 'h':
                     printf(R"(-h: hint: 
--a [int]: auto: 文字列を標準入力で指定せずに, 自動で生成します. 引数には文字列の長さを指定します.
+-a [int]: auto: 文字列を標準入力で指定せずに, 自動で生成します. 引数には文字列の長さ (2^n) を指定します.
 -h: hint: ヒントを表示します.
 to_ip: 送信先の ip アドレスを指定します.
 Usage: %s [-a] to_ip ...
@@ -92,7 +93,7 @@ Usage: %s [-a] to_ip ...
         random_device rd;
         mt19937_64 mt(rd());
         uniform_int_distribution<char> cU(30, 80);
-        for (size_t i = 0; i < option_auto_length; i++)
+        for (size_t i = 0; i < pow(2, option_auto_length); i++)
         {
             char c = cU(mt);
             msg.push_back(c);
@@ -115,6 +116,7 @@ Usage: %s [-a] to_ip ...
             }
         }
 
+        auto start = std::chrono::high_resolution_clock::now();
         time(&now);
 
         n = write(
@@ -137,6 +139,21 @@ Usage: %s [-a] to_ip ...
 
         // サーバからの返信された文字列（現在時刻）を表示
         cout << buff;
+
+        string recv_msg = buff;
+
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+        time(&later);
+
+        cout << "Echo: " << recv_msg << ", " << htons(serv_addr.sin_port) << "\n";
+
+        double seconds = std::difftime(later, now);
+        cout << "RTT: " << elapsed.count() << " ms\n";
+
+        if (option_auto == true) {
+            break;
+        };
     }
 
     // close the socket
