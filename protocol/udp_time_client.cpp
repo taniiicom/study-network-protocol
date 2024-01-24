@@ -122,7 +122,7 @@ Usage: %s [-a] to_ip ...
 
                 // 送信
                 // buf: char 型配列の送信する先頭ポインタ
-                n = sendto(socketd, msg.c_str() + cursor, sending_size, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+                n = sendto(socketd, msg.c_str() + cursor, sending_size+1, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
                 if (n < 0) {
                     cout << "Failed to send a message.\n";
                     return -1;
