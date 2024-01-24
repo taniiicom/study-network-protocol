@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 
         // 受信
         string recv_msg = ""; // メッセージ
-        {
+        { // arrival
             int cursor = 0; // バッファのカーソル
             char snippet[BUFF_SIZE];
 
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
         // time(&now);
         // string msg = string("from shibata ") + ctime(&now); // string クラスは加算演算子で文字列を結合可能．
 
-        { // arrival
+        { // departure
             // 文字列を分割して送信
             msg += char(4); // EOT: end of transmission
 
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
                 // 送信
                 // buf: char 型配列の送信する先頭ポインタ
-                n = sendto(serv_socket, msg.c_str() + cursor, sending_size, 0, (struct sockaddr *)&clnt_addr, sizeof(clnt_addr));
+                n = sendto(serv_socket, msg.c_str() + cursor, sending_size+1, 0, (struct sockaddr *)&clnt_addr, sizeof(clnt_addr));
                 if (n < 0) {
                     cout << "Failed to send a message.\n";
                     return -1;

@@ -132,19 +132,47 @@ Usage: %s [-a] to_ip ...
             }
         }
 
-        // サーバから受信．
-        n = recvfrom(socketd, buff, sizeof(buff)-1, 0, NULL, NULL); // 終端文字列を入れるために，sizeof(buff)-1 として，文字列一つ分必ず余裕を持たせてデータを受信する．buff をこのまま文字列として使わない場合は全記憶を受信に使う．
-        if (n < 0) {
-            cout << "Failed to receive a message.\n";
-            return -1;
+        // 受信
+        string recv_msg = "";
+        bool is_end = false;
+        { // arrival
+            int cursor = 0; // バッファのカーソル
+            char snippet[BUFF_SIZE];
+
+            while (!is_end)
+            {
+                n = recvfrom(socketd, snippet, sizeof(snippet), 0, NULL, NULL);
+                if (n < 0) {
+                    cout << "failed to read a query from the socket.\n";
+                    return -1;
+                }
+
+                printf("受信中...\n");
+
+                // sub_msg に 終端文字が含まれいているか check
+                for (int i = 0; i < n; i++)
+                {
+                    if (snippet[i] == char(4))
+                    {
+                        printf("終端文字を検出しました.\n");
+                        is_end = true;
+                        recv_msg.push_back('\0');
+                        break;
+                    }
+
+                    if (snippet[i] != '\0') {
+                        recv_msg.push_back(snippet[i]);
+                    }
+                }
+                cursor += BUFF_SIZE;
+            }
         }
 
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> elapsed = end - start;
         time(&later);
 
-        buff[n] = 0; // 終端文字列を追加．送信者が終端文字列を入れてデータを送ってきているとは限らない．
-        cout << "Echo: " << buff << ", " << htons(serv_addr.sin_port) << "\n";
+        cout << "Echo: " << recv_msg << ", " << htons(serv_addr.sin_port) << "\n";
 
         double seconds = std::difftime(later, now);
         cout << "RTT: " << elapsed.count() << " ms\n";
