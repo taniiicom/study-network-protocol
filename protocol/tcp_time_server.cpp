@@ -1,15 +1,4 @@
-//
-// 情報通信応用実験 ネットワークプログラミング
-//
-// 首都大学東京 システムデザイン学部 情報通信システムコース
-// 准教授・酒井和哉
-// ２０１５年２月５日
-//
-// 情報科学科
-// 助教・柴田祐樹
-// ２０１９年１０月　改訂
-// ２０２０年１０月　改訂
-//
+// Echo Program (server)
 
 #include <arpa/inet.h>
 #include <iostream>
@@ -85,7 +74,11 @@ int main(int argc, char *argv[])
         // time(.)で現在時間取得（秒単位の歴時間）、ctime(.)で文字列に変換し、送信バッファに書き込み。
         time(&now);
 
-        string msg = ctime(&now);
+        string m = buff; // 受け取ったメッセージ
+        string ip = inet_ntoa(clnt_addr.sin_addr);
+        string port = to_string(htons(clnt_addr.sin_port));
+        string msg = m + " " + ip + " " + port; // string クラスは加算演算子で文字列を結合可能．
+        cout << msg << endl;
 
         // クライアントソケットにバッファの内容を書き込む。
         n = write(clnt_socket, msg.c_str(), msg.size());
