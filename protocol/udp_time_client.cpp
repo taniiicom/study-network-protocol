@@ -112,7 +112,7 @@ Usage: %s [-a] to_ip ...
 
         { // departure
             // 文字列を分割して送信
-            msg += char(4); // EOT: end of transmission
+            msg += char(3); // EOT: end of transmission
 
             int cursor = 0;
             int msg_size = msg.size();
