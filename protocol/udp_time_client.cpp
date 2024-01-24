@@ -111,12 +111,17 @@ Usage: %s [-a] to_ip ...
         time(&now);
 
         // 文字列を分割して送信
+        msg += char(4); // EOT: end of transmission
+
         int cursor = 0;
         int msg_size = msg.size();
 
         while (cursor < msg_size) {
+            int sending_size = min(BUFF_SIZE, msg_size - cursor);
+
             // 送信
-            n = sendto(socketd, msg.c_str() + cursor, BUFF_SIZE, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+            // buf: char 型配列の送信する先頭ポインタ
+            n = sendto(socketd, msg.c_str() + cursor, sending_size, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
             if (n < 0) {
                 cout << "Failed to send a message.\n";
                 return -1;
@@ -125,7 +130,7 @@ Usage: %s [-a] to_ip ...
             cursor += BUFF_SIZE;
         }
 
-        // サーバから現在時刻を文字列として受信．
+        // サーバから受信．
         n = recvfrom(socketd, buff, sizeof(buff)-1, 0, NULL, NULL); // 終端文字列を入れるために，sizeof(buff)-1 として，文字列一つ分必ず余裕を持たせてデータを受信する．buff をこのまま文字列として使わない場合は全記憶を受信に使う．
         if (n < 0) {
             cout << "Failed to receive a message.\n";
