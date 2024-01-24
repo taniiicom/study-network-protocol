@@ -69,9 +69,9 @@ int main(int argc, char* argv[])
                 printf("受信中...\n");
 
                 // sub_msg に 終端文字が含まれいているか check
-                for (int i = cursor; i < cursor + BUFF_SIZE; i++)
+                for (int i = 0; i < n; i++)
                 {
-                    if (snippet[i] == char(3))
+                    if (snippet[i] == char(4))
                     {
                         printf("終端文字を検出しました.\n");
                         is_end = true;
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 
         { // arrival
             // 文字列を分割して送信
-            msg += char(3); // EOT: end of text
+            msg += char(4); // EOT: end of transmission
 
             int cursor = 0;
             int msg_size = msg.size();
