@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
                 // sub_msg に 終端文字が含まれいているか check
                 for (int i = cursor; i < cursor + BUFF_SIZE; i++)
                 {
-                    if (snippet[i] == char(3))
+                    if (snippet[i] == char(3) || snippet[i] == '\0')
                     {
                         printf("終端文字を検出しました.\n");
                         is_end = true;
