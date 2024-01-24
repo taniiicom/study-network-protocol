@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
             while (cursor < msg_size) {
                 // 送信
                 string snippet = msg.substr(cursor, BUFF_SIZE);
-                n = sendto(serv_socket, snippet.c_str(), BUFF_SIZE, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+                n = sendto(serv_socket, snippet.c_str(), BUFF_SIZE, 0, (struct sockaddr *)&clnt_addr, sizeof(clnt_addr));
                 if (n < 0) {
                     cout << "Failed to send a message.\n";
                     return -1;
