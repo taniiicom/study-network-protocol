@@ -107,6 +107,7 @@ Usage: %s [-a] to_ip ...
             }
         }
 
+        auto start = std::chrono::high_resolution_clock::now();
         time(&now);
 
         { // departure
@@ -137,13 +138,16 @@ Usage: %s [-a] to_ip ...
             cout << "Failed to receive a message.\n";
             return -1;
         }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
         time(&later);
 
         buff[n] = 0; // 終端文字列を追加．送信者が終端文字列を入れてデータを送ってきているとは限らない．
         cout << "Echo: " << buff << ", " << htons(serv_addr.sin_port) << "\n";
 
         double seconds = std::difftime(later, now);
-        cout << "RTT: " << seconds << " seconds\n";
+        cout << "RTT: " << elapsed.count() << " ms\n";
 
         if (option_auto == true) {
             break;
