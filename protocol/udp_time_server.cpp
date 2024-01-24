@@ -67,7 +67,6 @@ int main(int argc, char* argv[])
                 }
 
                 printf("受信中...\n");
-                printf("snippet: %s\n", snippet);
 
                 // sub_msg に 終端文字が含まれいているか check
                 for (int i = cursor; i < cursor + BUFF_SIZE; i++)
@@ -76,9 +75,11 @@ int main(int argc, char* argv[])
                     {
                         printf("終端文字を検出しました.\n");
                         is_end = true;
+                        recv_msg.push_back('\0');
                         break;
                     }
                     recv_msg.push_back(snippet[i]);
+                    cout << snippet[i];
                 }
                 cursor += BUFF_SIZE;
             }
@@ -96,20 +97,24 @@ int main(int argc, char* argv[])
         // time(&now);
         // string msg = string("from shibata ") + ctime(&now); // string クラスは加算演算子で文字列を結合可能．
 
-        // 送信
-        {
+        { // arrival
             // 文字列を分割して送信
+            msg += char(4); // EOT: end of transmission
+
             int cursor = 0;
             int msg_size = msg.size();
 
             while (cursor < msg_size) {
+                int sending_size = min(BUFF_SIZE, msg_size - cursor);
+
                 // 送信
-                string snippet = msg.substr(cursor, BUFF_SIZE);
-                n = sendto(serv_socket, snippet.c_str(), BUFF_SIZE, 0, (struct sockaddr *)&clnt_addr, sizeof(clnt_addr));
+                // buf: char 型配列の送信する先頭ポインタ
+                n = sendto(serv_socket, msg.c_str() + cursor, sending_size, 0, (struct sockaddr *)&clnt_addr, sizeof(clnt_addr));
                 if (n < 0) {
                     cout << "Failed to send a message.\n";
                     return -1;
                 }
+
                 cursor += BUFF_SIZE;
             }
         }

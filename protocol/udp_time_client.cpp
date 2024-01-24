@@ -110,24 +110,26 @@ Usage: %s [-a] to_ip ...
 
         time(&now);
 
-        // 文字列を分割して送信
-        msg += char(4); // EOT: end of transmission
+        { // departure
+            // 文字列を分割して送信
+            msg += char(4); // EOT: end of transmission
 
-        int cursor = 0;
-        int msg_size = msg.size();
+            int cursor = 0;
+            int msg_size = msg.size();
 
-        while (cursor < msg_size) {
-            int sending_size = min(BUFF_SIZE, msg_size - cursor);
+            while (cursor < msg_size) {
+                int sending_size = min(BUFF_SIZE, msg_size - cursor);
 
-            // 送信
-            // buf: char 型配列の送信する先頭ポインタ
-            n = sendto(socketd, msg.c_str() + cursor, sending_size, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
-            if (n < 0) {
-                cout << "Failed to send a message.\n";
-                return -1;
+                // 送信
+                // buf: char 型配列の送信する先頭ポインタ
+                n = sendto(socketd, msg.c_str() + cursor, sending_size, 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+                if (n < 0) {
+                    cout << "Failed to send a message.\n";
+                    return -1;
+                }
+
+                cursor += sending_size + 1;
             }
-
-            cursor += BUFF_SIZE;
         }
 
         // サーバから受信．
