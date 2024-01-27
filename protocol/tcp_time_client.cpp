@@ -10,11 +10,12 @@
 #include <cmath>
 
 const int BUFF_SIZE = 500; // バッファのサイズ
+using namespace std;
 
 int main(int argc, char* argv[])
 {
     using namespace std;
-    cout << "tcp time client v1.0.0" << endl; // ソースコードへの変更を行ったら数値を変える．
+    cout << "tcp echo client v1.0.0" << endl; // ソースコードへの変更を行ったら数値を変える．
 
     // サーバのアドレスとポート番号
     // 127.0.0.1は，ループバックアドレス
@@ -106,7 +107,7 @@ Usage: %s [-a] to_ip ...
 
         if (option_auto == true) {
             printf("-a オプションが有効のため, 自動で生成した文字列を送信します.\n");
-            printf("string length: %i\n", option_auto_length);
+            printf("string length: 2^ %i\n", option_auto_length);
             printf("string: %s\n", msg.c_str());
         } else {
             cout << "input message: ";
