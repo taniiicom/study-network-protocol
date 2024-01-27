@@ -11,12 +11,9 @@
 const int BUFF_SIZE = 500; // バッファのサイズ
 using namespace std;
 
-/*
- * UDP Daytimeクライアント
- */
 int main(int argc, char* argv[])
 {
-    cout << "upd time client v1.0.0" << endl; // ソースコードへの変更を行ったら数値を変える．
+    cout << "upd echo client v1.0.0" << endl; // ソースコードへの変更を行ったら数値を変える．
     string serv_ip = "127.0.0.1"; // ループバックアドレス
     in_port_t port_num = 5000; // ポート番号
     int n = 0; // 戻り値の保存用
