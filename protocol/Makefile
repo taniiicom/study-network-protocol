@@ -15,7 +15,7 @@
 # ターミナルで「make」と入力すると実行するコマンドリスト
 # タブでallの範囲を指定する。
 # 「-w」は、警告を全て出す、「-o」でコンパイル後の実行ファイル名
-all: tod cmds cmdc tec tes uec ues 2ch
+all: tod cmds cmdc tec tes uec ues
 
 # tts: tcp_time_server.cpp
 # 	g++ -std=c++14  -w  tcp_time_server.cpp -o tts 
@@ -39,8 +39,6 @@ uec: udp_echo_client.cpp
 	g++ -std=c++14  -w  command.client.cpp -o cmdc
 ues: udp_echo_server.cpp
 	g++ -std=c++14  -w  command.client.cpp -o cmdc
-2ch: 2ch.cpp
-	g++ -std=c++14  -w  2ch_client.cpp -o 2ch
 
 clean:
-	rm tod cmds cmdc tec tes uec ues 2ch
+	rm tod cmds cmdc tec tes uec ues
