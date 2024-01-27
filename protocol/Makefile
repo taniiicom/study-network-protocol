@@ -32,13 +32,13 @@ cmds:  command.server.cpp
 cmdc: command.client.cpp
 	g++ -std=c++14  -w  command.client.cpp -o cmdc
 tec: tcp_echo_client.cpp
-	g++ -std=c++14  -w  command.client.cpp -o tec
+	g++ -std=c++14  -w  tcp_echo_client.cpp -o tec
 tes: tcp_echo_server.cpp
-	g++ -std=c++14  -w  command.client.cpp -o tes
+	g++ -std=c++14  -w  tcp_echo_server.cpp -o tes
 uec: udp_echo_client.cpp
-	g++ -std=c++14  -w  command.client.cpp -o uec
+	g++ -std=c++14  -w  udp_echo_client.cpp -o uec
 ues: udp_echo_server.cpp
-	g++ -std=c++14  -w  command.client.cpp -o ues
+	g++ -std=c++14  -w  udp_echo_server.cpp -o ues
 
 clean:
 	rm tod cmds cmdc tec tes uec ues
