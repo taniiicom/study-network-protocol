@@ -17,21 +17,26 @@
 # 「-w」は、警告を全て出す、「-o」でコンパイル後の実行ファイル名
 all: tts ttc uts utc tod cmds cmdc
 
-tts: tcp_time_server.cpp
-	g++ -std=c++14  -w  tcp_time_server.cpp -o tts 
-ttc: tcp_time_client.cpp
-	g++ -std=c++14  -w  tcp_time_client.cpp -o ttc 
-uts: udp_time_server.cpp
-	g++ -std=c++14  -w  udp_time_server.cpp -o uts 
-utc: udp_time_client.cpp
-	g++ -std=c++14  -w  udp_time_client.cpp -o utc 
+# tts: tcp_time_server.cpp
+# 	g++ -std=c++14  -w  tcp_time_server.cpp -o tts 
+# ttc: tcp_time_client.cpp
+# 	g++ -std=c++14  -w  tcp_time_client.cpp -o ttc 
+# uts: udp_time_server.cpp
+# 	g++ -std=c++14  -w  udp_time_server.cpp -o uts 
+# utc: udp_time_client.cpp
+# 	g++ -std=c++14  -w  udp_time_client.cpp -o utc 
 tod: ex_gettimeofday.cpp 
 	g++ -std=c++14  -w  ex_gettimeofday.cpp -o tod
 cmds:  command.server.cpp
 	g++ -std=c++14  -w  command.server.cpp -o cmds
 cmdc: command.client.cpp
 	g++ -std=c++14  -w  command.client.cpp -o cmdc
-
+tec: tcp_echo_client.cpp
+	g++ -std=c++14  -w  command.client.cpp -o cmdc
+uec: command.client.cpp
+	g++ -std=c++14  -w  command.client.cpp -o cmdc
+2ch: 2ch.cpp
+	g++ -std=c++14  -w  2ch_client.cpp -o 2ch
 
 clean:
-	rm tts ttc uts utc tod cmds cmdc
+	rm tts ttc uts utc tod cmds cmdc tec uec 2ch
