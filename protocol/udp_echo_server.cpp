@@ -89,9 +89,13 @@ int main(int argc, char* argv[]) {
     string m = recv_msg;  // 受け取ったメッセージ
     string ip = inet_ntoa(clnt_addr.sin_addr);
     string port = to_string(htons(clnt_addr.sin_port));
-    string msg = m + " " + ip + " " +
-                 port;  // string クラスは加算演算子で文字列を結合可能．
+    string msg = m;
+
+    cout << "MESSAGE: " << endl;
     cout << msg << endl;
+    cout << "IP: " << ip << endl;
+    cout << "PORT: " << port << endl;
+    cout << "-----" << endl;
 
     // 現在時刻取得
     // time(&now);

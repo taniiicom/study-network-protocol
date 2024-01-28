@@ -193,7 +193,7 @@ Usage: %s [-a] to_ip ...
     time(&later);
 
     cout << "Echo: " << endl;
-    cout << recv_msg << ", " << htons(serv_addr.sin_port) << "\n";
+    cout << recv_msg << "\n";
     ofs << recv_msg << std::endl;
 
     double seconds = std::difftime(later, now);
