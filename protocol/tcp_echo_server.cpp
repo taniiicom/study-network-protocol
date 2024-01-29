@@ -81,8 +81,7 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    buff[n] =
-        '\0';  // 文字列として他の関数に渡す場合は，終端文字を追加することを忘れないように気をつける．
+    recv_msg.push_back('\0');
 
     string m = recv_msg;  // 受け取ったメッセージ
     string ip = inet_ntoa(clnt_addr.sin_addr);
@@ -96,7 +95,7 @@ int main(int argc, char *argv[]) {
     cout << "-----" << endl;
 
     // クライアントソケットにバッファの内容を書き込む。
-    n = write(serv_socket, msg.c_str(), msg.size());
+    n = write(clnt_socket, msg.c_str(), msg.size());
 
     // クライアントとの通信は終了したので、ソケットを閉じる。
     close(clnt_socket);

@@ -153,7 +153,8 @@ Usage: %s [-a] to_ip ...
 
     for (;;) {
       n = read(socketd, buff, sizeof(buff));
-      if (n <= 0) {
+
+      if (n < 0) {
         // 相手の通信が切断されている．
         cout << "failed to read from a socket\n";
         return -1;
@@ -166,20 +167,7 @@ Usage: %s [-a] to_ip ...
       }
     }
 
-    buff[n] =
-        '\0';  // 文字列として他の関数に渡す場合は，終端文字を追加することを忘れないように気をつける．
-
-    if (n < 0) {
-      // readの戻り値が負の場合，通信に不具合が生じたことを意味する．
-      cout << "failed to read from a socket\n";
-      return -1;
-    }
-    // readの戻り値が 0 の場合，相手が接続を遮断したことを意味する．
-    buff[n] = 0;
-    if (n <= 0) {
-      // 相手の通信が切断されている．
-      return -1;
-    }
+    recv_msg.push_back('\0');
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed = end - start;
