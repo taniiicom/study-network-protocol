@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
     cout << "-----" << endl;
 
     // クライアントソケットにバッファの内容を書き込む。
-    n = write(clnt_socket, msg.c_str(), msg.size());
+    n = write(serv_socket, msg.c_str(), msg.size());
 
     // クライアントとの通信は終了したので、ソケットを閉じる。
     close(clnt_socket);

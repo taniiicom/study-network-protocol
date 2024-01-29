@@ -153,8 +153,9 @@ Usage: %s [-a] to_ip ...
 
     for (;;) {
       n = read(socketd, buff, sizeof(buff));
-      if (n < 0) {
+      if (n <= 0) {
         // 相手の通信が切断されている．
+        cout << "failed to read from a socket\n";
         return -1;
       }
 
