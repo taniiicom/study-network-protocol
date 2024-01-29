@@ -69,8 +69,10 @@ int main(int argc, char *argv[]) {
 
     for (;;) {
       n = read(clnt_socket, buff + cursor, sizeof(buff));
-      if (n <= 0) {
+      if (n < 0) {
         // 相手の通信が切断されている．
+        return -1;
+      } else if {
         break;
       } else {
         cursor += n;
