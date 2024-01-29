@@ -72,7 +72,9 @@ int main(int argc, char *argv[]) {
       if (n < 0) {
         // 相手の通信が切断されている．
         return -1;
-      } else if (n == 0) {
+      }
+
+      if (n == 0 || buff[cursor + n - 1] == '\0') {
         break;
       } else {
         cursor += n;
