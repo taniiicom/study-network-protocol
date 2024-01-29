@@ -149,21 +149,24 @@ Usage: %s [-a] to_ip ...
         socketd, msg.c_str(),
         msg.size());  // 文字列の送信．第二引数は記憶域．第３引数は送信するByte数．
 
-    int cursor = 0;
+    string recv_msg = "";  // 受信メッセージ
 
     for (;;) {
-      n = read(socketd, buff + cursor, sizeof(buff));
-      if (n <= 0) {
+      n = read(socketd, buff, sizeof(buff));
+      if (n < 0) {
         // 相手の通信が切断されている．
+        return -1;
+      }
+
+      recv_msg += buff;
+
+      if (n == 0 || buff[n - 1] == '\0') {
         break;
-      } else {
-        cursor += n;
       }
     }
 
     buff[n] =
         '\0';  // 文字列として他の関数に渡す場合は，終端文字を追加することを忘れないように気をつける．
-    cout << buff;
 
     if (n < 0) {
       // readの戻り値が負の場合，通信に不具合が生じたことを意味する．
@@ -176,8 +179,6 @@ Usage: %s [-a] to_ip ...
       // 相手の通信が切断されている．
       return -1;
     }
-
-    string recv_msg = buff;
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed = end - start;
