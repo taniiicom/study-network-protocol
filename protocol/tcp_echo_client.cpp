@@ -149,8 +149,22 @@ Usage: %s [-a] to_ip ...
         socketd, msg.c_str(),
         msg.size());  // 文字列の送信．第二引数は記憶域．第３引数は送信するByte数．
 
-    // read(.)により，データを受信する．
-    n = read(socketd, buff, sizeof(buff) - 1);
+    int cursor = 0;
+
+    for (;;) {
+      n = read(socketd, buff + cursor, sizeof(buff));
+      if (n <= 0) {
+        // 相手の通信が切断されている．
+        break;
+      } else {
+        cursor += n;
+      }
+    }
+
+    buff[n] =
+        '\0';  // 文字列として他の関数に渡す場合は，終端文字を追加することを忘れないように気をつける．
+    cout << buff;
+
     if (n < 0) {
       // readの戻り値が負の場合，通信に不具合が生じたことを意味する．
       cout << "failed to read from a socket\n";
@@ -170,7 +184,7 @@ Usage: %s [-a] to_ip ...
     time(&later);
 
     cout << "Echo: " << endl;
-    cout << recv_msg << ", " << htons(serv_addr.sin_port) << "\n";
+    cout << recv_msg << "\n";
     ofs << recv_msg << std::endl;
 
     double seconds = std::difftime(later, now);
