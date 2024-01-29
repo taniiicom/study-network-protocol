@@ -65,19 +65,19 @@ int main(int argc, char *argv[]) {
     cout << "Accepted a connection from [" << inet_ntoa(clnt_addr.sin_addr)
          << "," << htons(clnt_addr.sin_port) << "]" << endl;
 
-    int cursor = 0;
+    string recv_msg = "";  // 受信メッセージ
 
     for (;;) {
-      n = read(clnt_socket, buff + cursor, sizeof(buff));
+      n = read(clnt_socket, buff, sizeof(buff));
       if (n < 0) {
         // 相手の通信が切断されている．
         return -1;
       }
 
-      if (n == 0 || buff[cursor + n - 1] == '\0') {
+      recv_msg += buff;
+
+      if (n == 0 || buff[n - 1] == '\0') {
         break;
-      } else {
-        cursor += n;
       }
     }
 
