@@ -14,7 +14,7 @@ for i in range(len(lines)):
 
 # Extracting the values from the dataframe
 y_values = lines
-x_values = [10**i for i in range(0, len(y_values))]
+x_values = [2**i for i in range(0, len(y_values))]
 
 # Plotting the graph
 plt.figure(figsize=(10, 6))
