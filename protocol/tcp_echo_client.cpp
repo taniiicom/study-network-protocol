@@ -145,6 +145,8 @@ Usage: %s [-a] to_ip ...
     auto start = std::chrono::high_resolution_clock::now();
     time(&now);
 
+    msg += '\0';  // EOT: end of transmission
+
     n = write(
         socketd, msg.c_str(),
         msg.size());  // 文字列の送信．第二引数は記憶域．第３引数は送信するByte数．
